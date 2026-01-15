@@ -1,0 +1,190 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-terminal-text/20;
+  }
+  
+  body {
+    @apply font-mono antialiased;
+    background: #0a0e0a;
+    color: #00ff41;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-terminal-bg;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-terminal-dim rounded;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-terminal-text;
+  }
+}
+
+@layer components {
+  /* CRT Screen Effect */
+  .crt-effect {
+    position: relative;
+    animation: flicker 0.15s infinite;
+  }
+
+  .crt-effect::before {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    z-index: 2;
+    background-size: 100% 2px, 3px 100%;
+    pointer-events: none;
+  }
+
+  .crt-effect::after {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(18, 16, 16, 0.1);
+    opacity: 0;
+    z-index: 2;
+    pointer-events: none;
+    animation: flicker 0.15s infinite;
+  }
+
+  /* Scanline effect */
+  .scanline {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .scanline::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      transparent 0%,
+      rgba(0, 255, 65, 0.1) 50%,
+      transparent 100%
+    );
+    animation: scanline 8s linear infinite;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  /* Neon button */
+  .btn-neon {
+    @apply relative px-6 py-3 font-bold uppercase tracking-wider;
+    @apply border-2 border-current rounded;
+    @apply transition-all duration-300;
+    @apply hover:shadow-neon;
+  }
+
+  /* Retro card */
+  .card-retro {
+    @apply bg-terminal-bg/80 backdrop-blur-sm;
+    @apply border-2 border-terminal-dim rounded-lg p-6;
+    @apply transition-all duration-300;
+    @apply hover:border-terminal-text hover:shadow-neon-sm;
+  }
+
+  /* Input field */
+  .input-retro {
+    @apply w-full bg-terminal-bg/50 border-2 border-terminal-dim;
+    @apply text-terminal-text font-mono px-4 py-2 rounded;
+    @apply focus:outline-none focus:border-terminal-bright focus:shadow-neon-sm;
+    @apply transition-all duration-200;
+  }
+
+  /* Code block */
+  .code-block {
+    @apply bg-terminal-bg/90 border-2 border-terminal-dim rounded-lg p-4;
+    @apply font-mono text-sm overflow-x-auto;
+  }
+
+  /* Achievement badge */
+  .achievement-badge {
+    @apply inline-flex items-center gap-2 px-3 py-1 rounded-full;
+    @apply bg-gradient-to-r from-cyber-purple to-cyber-pink;
+    @apply text-white text-xs font-bold uppercase tracking-wide;
+    @apply shadow-neon-sm;
+  }
+
+  /* Level indicator */
+  .level-badge {
+    @apply inline-flex items-center justify-center;
+    @apply w-10 h-10 rounded-full bg-terminal-dim;
+    @apply text-terminal-bg font-bold text-sm;
+    @apply shadow-neon-sm;
+  }
+
+  /* Glitch text effect */
+  .glitch {
+    position: relative;
+  }
+
+  .glitch::before,
+  .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .glitch::before {
+    left: 2px;
+    text-shadow: -2px 0 #ff00de;
+    clip: rect(24px, 550px, 90px, 0);
+    animation: glitch 3s infinite linear alternate-reverse;
+  }
+
+  .glitch::after {
+    left: -2px;
+    text-shadow: -2px 0 #00fff9;
+    clip: rect(85px, 550px, 140px, 0);
+    animation: glitch 2s infinite linear alternate-reverse;
+  }
+}
+
+/* Custom animations */
+@keyframes typewriter {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Typing cursor */
+.typing-cursor::after {
+  content: '▊';
+  animation: blink 1s step-end infinite;
+}

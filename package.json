@@ -1,0 +1,55 @@
+{
+  "name": "json-to-toon-platform",
+  "version": "1.0.0",
+  "description": "Advanced JSON to TOON conversion platform with retro gaming aesthetics and developer-friendly features",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
+    "server:dev": "nodemon --exec node --experimental-modules backend/server.js",
+    "client:dev": "cd client && npm run dev",
+    "server:start": "node backend/server.js",
+    "client:build": "cd client && npm run build",
+    "install:all": "npm install && cd client && npm install",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch",
+    "lint": "eslint backend client/src --ext .js,.jsx",
+    "format": "prettier --write \"**/*.{js,jsx,json,md}\""
+  },
+  "keywords": [
+    "json",
+    "toon",
+    "converter",
+    "retro",
+    "developer-tools",
+    "parser"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^8.0.3",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "express-validator": "^7.0.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "helmet": "^7.1.0",
+    "express-rate-limit": "^7.1.5",
+    "morgan": "^1.10.0",
+    "compression": "^1.7.4",
+    "winston": "^3.11.0",
+    "socket.io": "^4.6.0",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.9.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "concurrently": "^8.2.2",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3",
+    "eslint": "^8.56.0",
+    "prettier": "^3.1.1",
+    "@babel/preset-env": "^7.23.6"
+  }
+}
