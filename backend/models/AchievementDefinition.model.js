@@ -6,7 +6,7 @@ const achievementDefinitionSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  name: {
+  title: {
     type: String,
     required: true,
   },
@@ -20,25 +20,33 @@ const achievementDefinitionSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ['conversion', 'social', 'exploration', 'special', 'milestone'],
+    enum: ['conversion', 'social', 'special'],
     required: true,
-  },
-  requirement: {
-    type: mongoose.Schema.Types.Mixed,
-    required: true,
-  },
-  experienceReward: {
-    type: Number,
-    default: 50,
   },
   rarity: {
     type: String,
     enum: ['common', 'rare', 'epic', 'legendary'],
     default: 'common',
   },
-  isSecret: {
+  requirements: {
+    type: {
+      type: String,
+      enum: ['count', 'milestone', 'special'],
+    },
+    target: Number,
+    condition: String
+  },
+  experienceReward: {
+    type: Number,
+    default: 0,
+  },
+  reputationReward: {
+    type: Number,
+    default: 0,
+  },
+  isActive: {
     type: Boolean,
-    default: false,
+    default: true,
   },
 });
 

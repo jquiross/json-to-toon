@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Login</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #000; color: #0f0; }
+        .container { max-width: 500px; margin: 0 auto; }
+        input, button { padding: 10px; margin: 5px 0; width: 100%; box-sizing: border-box; }
+        button { background: #0f0; color: #000; border: none; cursor: pointer; }
+        .result { margin-top: 20px; padding: 10px; border: 1px solid #0f0; background: #001100; }
+        .error { color: #f00; border-color: #f00; background: #110000; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Test Login API</h1>
+        
+        <form id="loginForm">
+            <input type="email" id="email" placeholder="Email" value="jeremyquiros03@gmail.com" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">LOGIN</button>
+        </form>
+        
+        <div id="result"></div>
+        
+        <h3>💡 Contraseñas comunes a probar:</h3>
+        <ul>
+            <li><button onclick="testPassword('123456')">123456</button></li>
+            <li><button onclick="testPassword('password')">password</button></li>
+            <li><button onclick="testPassword('password123')">password123</button></li>
+            <li><button onclick="testPassword('12345678')">12345678</button></li>
+            <li><button onclick="testPassword('jeremy123')">jeremy123</button></li>
+        </ul>
+    </div>
+
+    <script>
+        function testPassword(pass) {
+            document.getElementById('password').value = pass;
+            document.getElementById('loginForm').submit();
+        }
+        
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('result');
+            
+            resultDiv.innerHTML = '🔄 Testing login...';
+            resultDiv.className = 'result';
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <strong>✅ LOGIN SUCCESSFUL!</strong><br>
+                        Username: ${data.user.username}<br>
+                        Email: ${data.user.email}<br>
+                        Level: ${data.user.level}<br>
+                        Token received: ${!!data.token}
+                    `;
+                    resultDiv.className = 'result';
+                } else {
+                    resultDiv.innerHTML = `
+                        <strong>❌ LOGIN FAILED</strong><br>
+                        Status: ${response.status}<br>
+                        Message: ${data.message || 'Unknown error'}<br>
+                        <small>Password "${password}" is incorrect</small>
+                    `;
+                    resultDiv.className = 'result error';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <strong>🚫 NETWORK ERROR</strong><br>
+                    ${error.message}<br>
+                    <small>Make sure server is running on port 5000</small>
+                `;
+                resultDiv.className = 'result error';
+            }
+        });
+    </script>
+</body>
+</html>

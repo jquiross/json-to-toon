@@ -10,7 +10,7 @@ const router = express.Router();
 // @access  Public
 router.get('/', async (req, res, next) => {
   try {
-    const achievements = await AchievementDefinition.find({ isSecret: false });
+    const achievements = await AchievementDefinition.find({ isActive: true });
     
     res.json({
       success: true,

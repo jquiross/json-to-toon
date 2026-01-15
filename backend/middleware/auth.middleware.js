@@ -42,3 +42,35 @@ export const authorize = (...roles) => {
     next();
   };
 };
+
+export const optionalAuth = async (req, res, next) => {
+  try {
+    let token;
+
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+      token = req.headers.authorization.split(' ')[1];
+    }
+
+    // If no token, continue without user (public access)
+    if (!token) {
+      return next();
+    }
+
+    try {
+      const decoded = jwt.verify(token, config.jwtSecret);
+      const user = await User.findById(decoded.id).select('-password');
+      
+      // Only set req.user if user exists and is active
+      if (user && user.isActive) {
+        req.user = user;
+      }
+    } catch (error) {
+      // Token invalid or expired - continue without user
+      // Don't throw error for optional auth
+    }
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
