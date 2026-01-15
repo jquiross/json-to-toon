@@ -188,3 +188,192 @@
   content: '▊';
   animation: blink 1s step-end infinite;
 }
+
+/* THEME STYLES */
+/* Default: Terminal Green (retro-green) */
+body,
+.theme-retro-green {
+  --color-bg: #0a0e0a;
+  --color-text: #00ff41;
+  --color-dim: #005520;
+  --color-bright: #7fff7f;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* Cyberpunk Theme */
+.theme-cyberpunk {
+  --color-bg: #0f0f23;
+  --color-text: #ff00ff;
+  --color-dim: #660066;
+  --color-bright: #ff77ff;
+  background: linear-gradient(135deg, #0f0f23 0%, #1a0033 100%);
+  color: var(--color-text);
+}
+
+.theme-cyberpunk .border-terminal-dim {
+  border-color: var(--color-dim) !important;
+}
+
+.theme-cyberpunk .text-terminal-text {
+  color: var(--color-text) !important;
+}
+
+.theme-cyberpunk .bg-terminal-bg {
+  background-color: var(--color-bg) !important;
+}
+
+/* Neon Theme */
+.theme-neon {
+  --color-bg: #000000;
+  --color-text: #00ffff;
+  --color-dim: #004d4d;
+  --color-bright: #7fffff;
+  background: radial-gradient(ellipse at center, #001a1a 0%, #000000 100%);
+  color: var(--color-text);
+}
+
+.theme-neon .border-terminal-dim {
+  border-color: var(--color-dim) !important;
+}
+
+.theme-neon .text-terminal-text {
+  color: var(--color-text) !important;
+}
+
+.theme-neon .bg-terminal-bg {
+  background-color: var(--color-bg) !important;
+}
+
+/* CRT Theme */
+.theme-crt {
+  --color-bg: #1a1a0f;
+  --color-text: #33ff33;
+  --color-dim: #2d5016;
+  --color-bright: #99ff99;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+.theme-crt .border-terminal-dim {
+  border-color: var(--color-dim) !important;
+}
+
+.theme-crt .text-terminal-text {
+  color: var(--color-text) !important;
+}
+
+.theme-crt .bg-terminal-bg {
+  background-color: var(--color-bg) !important;
+}
+
+/* Amber Theme */
+.theme-amber {
+  --color-bg: #1a0f00;
+  --color-text: #ff9900;
+  --color-dim: #663d00;
+  --color-bright: #ffcc66;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+.theme-amber .border-terminal-dim {
+  border-color: var(--color-dim) !important;
+}
+
+.theme-amber .text-terminal-text {
+  color: var(--color-text) !important;
+}
+
+.theme-amber .bg-terminal-bg {
+  background-color: var(--color-bg) !important;
+}
+
+/* Matrix Theme */
+.theme-matrix {
+  --color-bg: #000000;
+  --color-text: #00ff00;
+  --color-dim: #003300;
+  --color-bright: #66ff66;
+  background: linear-gradient(0deg, #000000 0%, #001a00 100%);
+  color: var(--color-text);
+}
+
+.theme-matrix .border-terminal-dim {
+  border-color: var(--color-dim) !important;
+}
+
+.theme-matrix .text-terminal-text {
+  color: var(--color-text) !important;
+}
+
+.theme-matrix .bg-terminal-bg {
+  background-color: var(--color-bg) !important;
+}
+
+/* Matrix digital rain effect */
+.theme-matrix::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 255, 0, 0.03) 2px,
+      rgba(0, 255, 0, 0.03) 4px
+    );
+  pointer-events: none;
+  z-index: 0;
+  animation: matrix-rain 20s linear infinite;
+}
+
+@keyframes matrix-rain {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+/* Cyberpunk grid effect */
+.theme-cyberpunk::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(255, 0, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 0, 255, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: 0;
+  animation: grid-move 20s linear infinite;
+}
+
+@keyframes grid-move {
+  0% {
+    transform: perspective(500px) rotateX(60deg) translateY(0);
+  }
+  100% {
+    transform: perspective(500px) rotateX(60deg) translateY(50px);
+  }
+}
+
+/* Ensure content is above theme backgrounds */
+.theme-retro-green > *,
+.theme-cyberpunk > *,
+.theme-neon > *,
+.theme-crt > *,
+.theme-amber > *,
+.theme-matrix > * {
+  position: relative;
+  z-index: 1;
+}
