@@ -56,10 +56,15 @@ const Forum = () => {
             Discuss, share knowledge, and help other developers
           </p>
         </div>
-        {isAuthenticated && (
+        {isAuthenticated ? (
           <Link to="/forum/new" className="btn-neon px-6 py-3 flex items-center gap-2">
             <Plus size={20} />
             NEW POST
+          </Link>
+        ) : (
+          <Link to="/login" className="btn-neon px-6 py-3 flex items-center gap-2">
+            <Plus size={20} />
+            LOGIN TO POST
           </Link>
         )}
       </motion.div>

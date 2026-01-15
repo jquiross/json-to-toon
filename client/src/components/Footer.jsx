@@ -1,4 +1,4 @@
-import { Github, Twitter, Mail } from 'lucide-react';
+import { Github, Twitter, Mail, Linkedin } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -52,7 +52,7 @@ const Footer = () => {
             </h3>
             <div className="flex space-x-4">
               <a
-                href="https://github.com"
+                href="https://github.com/jquiross"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-terminal-bright transition-colors"
@@ -60,22 +60,22 @@ const Footer = () => {
                 <Github size={24} />
               </a>
               <a
-                href="https://twitter.com"
+                href=""
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-terminal-bright transition-colors"
               >
-                <Twitter size={24} />
+                <Linkedin size={24} />
               </a>
               <a
-                href="mailto:contact@jsontotoon.com"
+                href="https://www.linkedin.com/in/jeremy-quirós-84b746288/"
                 className="hover:text-terminal-bright transition-colors"
               >
                 <Mail size={24} />
               </a>
             </div>
             <p className="text-xs mt-4 text-terminal-dim">
-              Press ↑↑↓↓←→←→BA for a surprise 👾
+              Press Ctrl+Alt+Win+Shift+L for a surprise 👾
             </p>
           </div>
         </div>

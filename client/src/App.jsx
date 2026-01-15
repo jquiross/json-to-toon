@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Converter from './pages/Converter';
 import Forum from './pages/Forum';
 import ForumPost from './pages/ForumPost';
+import CreatePost from './pages/CreatePost';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -35,6 +36,14 @@ function App() {
           <Route index element={<Home />} />
           <Route path="converter" element={<Converter />} />
           <Route path="forum" element={<Forum />} />
+          <Route 
+            path="forum/new" 
+            element={
+              <ProtectedRoute>
+                <CreatePost />
+              </ProtectedRoute>
+            } 
+          />
           <Route path="forum/:postId" element={<ForumPost />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
