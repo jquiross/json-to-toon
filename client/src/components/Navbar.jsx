@@ -104,7 +104,7 @@ const Navbar = () => {
                       className="absolute right-0 mt-2 w-48 bg-terminal-bg border-2 border-terminal-dim rounded-lg overflow-hidden"
                     >
                       <Link
-                        to={`/profile/${user?._id}`}
+                        to={`/profile/${user?._id || user?.id}`}
                         className="block px-4 py-3 hover:bg-terminal-dim/30 transition-colors"
                         onClick={() => setProfileMenuOpen(false)}
                       >

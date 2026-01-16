@@ -24,24 +24,28 @@ const Profile = () => {
   const [profileUser, setProfileUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [editData, setEditData] = useState({
     username: '',
     email: '',
     bio: '',
   });
 
-  const isOwnProfile = currentUser?._id === userId;
+  const isOwnProfile = (currentUser?._id || currentUser?.id) === userId;
 
   useEffect(() => {
-    fetchProfile();
+    if (userId) {
+      fetchProfile();
+    }
   }, [userId]);
 
   const fetchProfile = async () => {
     try {
       setLoading(true);
+      setError(null);
       const { data } = await api.get(`/users/${userId}`);
       setProfileUser(data.user);
-      if (isOwnProfile) {
+      if ((currentUser?._id || currentUser?.id) === userId) {
         setEditData({
           username: data.user.username || '',
           email: data.user.email || '',
@@ -49,6 +53,8 @@ const Profile = () => {
         });
       }
     } catch (error) {
+      console.error('Error loading profile:', error);
+      setError(error.response?.data?.message || 'Error loading profile');
       toast.error('Error loading profile');
     } finally {
       setLoading(false);

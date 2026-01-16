@@ -47,6 +47,7 @@ export const register = async (req, res, next) => {
       token,
       refreshToken,
       user: {
+        _id: user._id,
         id: user._id,
         username: user.username,
         email: user.email,
@@ -97,6 +98,7 @@ export const login = async (req, res, next) => {
       token,
       refreshToken,
       user: {
+        _id: user._id,
         id: user._id,
         username: user.username,
         email: user.email,
