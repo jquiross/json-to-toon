@@ -450,10 +450,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👨‍💻 Author
 
-**Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Email: your.email@example.com
-- LinkedIn: [Your Name](https://linkedin.com/in/yourname)
+**Jeremy Quirós**
+- Email: jeremyquiros03@gmail.com
+- LinkedIn: [Jeremy Quirós](https://www.linkedin.com/in/jeremy-quirós-84b746288/)
 
 ---
 
@@ -462,15 +461,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Retro terminal aesthetics inspired by classic computing
 - Community feedback and contributions
 - Open source libraries and tools
-
----
-
-## 📞 Support
-
-- Documentation: [docs.jsontotoon.com](https://docs.jsontotoon.com)
-- Community Forum: [forum.jsontotoon.com](https://forum.jsontotoon.com)
-- Email: support@jsontotoon.com
-- Discord: [Join our server](https://discord.gg/jsontotoon)
 
 ---
 
