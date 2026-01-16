@@ -60,7 +60,7 @@ const Footer = () => {
                 <Github size={24} />
               </a>
               <a
-                href=""
+                href="https://www.linkedin.com/in/jeremy-quirós-84b746288/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-terminal-bright transition-colors"
@@ -68,7 +68,7 @@ const Footer = () => {
                 <Linkedin size={24} />
               </a>
               <a
-                href="https://www.linkedin.com/in/jeremy-quirós-84b746288/"
+                href="mailto:jeremyquiros03@gmail.com"
                 className="hover:text-terminal-bright transition-colors"
               >
                 <Mail size={24} />

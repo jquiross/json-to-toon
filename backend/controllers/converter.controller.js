@@ -4,6 +4,40 @@ import User from '../models/User.model.js';
 import { AppError } from '../middleware/errorHandler.js';
 import { checkAchievement } from '../services/achievement.service.js';
 
+// @desc    Upload and convert file
+// @route   POST /api/converter/upload
+// @access  Public/Private
+export const uploadAndConvert = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return next(new AppError('No file uploaded', 400));
+    }
+
+    const { conversionMode = 'json-to-toon' } = req.body;
+    const input = req.fileContent; // Content validated by middleware
+
+    const converter = new TOONConverter();
+    let result;
+
+    if (conversionMode === 'json-to-toon') {
+      result = converter.jsonToToon(input);
+    } else {
+      result = converter.toonToJson(input);
+    }
+
+    res.json({
+      success: result.success,
+      output: result.output,
+      errors: result.errors,
+      warnings: result.warnings,
+      metrics: result.metrics,
+      filename: req.file.originalname,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // @desc    Convert JSON to TOON
 // @route   POST /api/converter/json-to-toon
 // @access  Public/Private

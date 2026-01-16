@@ -69,7 +69,7 @@ export const getPosts = async (req, res, next) => {
     let sortOption = { isPinned: -1, createdAt: -1 };
     if (sort === 'popular') sortOption = { isPinned: -1, views: -1 };
     if (sort === 'votes') {
-      sortOption = { isPinned: -1 };
+      sortOption = { isPinned: -1, createdAt: -1 };
     }
 
     const posts = await ForumPost.find(query)
@@ -77,12 +77,22 @@ export const getPosts = async (req, res, next) => {
       .sort(sortOption)
       .limit(limit * 1)
       .skip((page - 1) * limit)
-      .select('-comments');
+      .select('-comments')
+      .lean();
+
+    if (!posts) {
+      return res.json({
+        success: true,
+        posts: [],
+        totalPages: 0,
+        currentPage: page,
+      });
+    }
 
     // Calculate score for each post
     const postsWithScore = posts.map(post => ({
-      ...post.toObject(),
-      score: post.upvotes.length - post.downvotes.length,
+      ...post,
+      score: (post.upvotes?.length || 0) - (post.downvotes?.length || 0),
     }));
 
     // Sort by score if requested
@@ -96,9 +106,10 @@ export const getPosts = async (req, res, next) => {
       success: true,
       posts: postsWithScore,
       totalPages: Math.ceil(count / limit),
-      currentPage: page,
+      currentPage: Number(page),
     });
   } catch (error) {
+    console.error('Error in getPosts:', error);
     next(error);
   }
 };

@@ -10,10 +10,12 @@ import {
   deleteConversion,
   getPublicConversions,
   toggleLike,
+  uploadAndConvert,
 } from '../controllers/converter.controller.js';
 import { protect } from '../middleware/auth.middleware.js';
 import { converterLimiter } from '../middleware/rateLimiter.js';
 import { body } from 'express-validator';
+import upload, { validateFileContent, handleMulterError } from '../middleware/upload.middleware.js';
 
 const router = express.Router();
 
@@ -26,6 +28,14 @@ router.post('/json-to-toon', converterLimiter, conversionValidation, jsonToToon)
 router.post('/toon-to-json', converterLimiter, conversionValidation, toonToJson);
 router.post('/validate', converterLimiter, conversionValidation, validateToon);
 router.post('/explain', converterLimiter, conversionValidation, explainJson);
+router.post(
+  '/upload',
+  converterLimiter,
+  upload.single('file'),
+  handleMulterError,
+  validateFileContent,
+  uploadAndConvert
+);
 router.get('/public', getPublicConversions);
 router.get('/:id', getConversionById);
 

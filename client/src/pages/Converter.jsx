@@ -11,7 +11,9 @@ import {
   Check, 
   AlertCircle,
   Lightbulb,
-  Zap
+  Zap,
+  Upload,
+  File
 } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 
@@ -27,6 +29,8 @@ const Converter = () => {
   const [isConverting, setIsConverting] = useState(false);
   const [copied, setCopied] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
+  const [uploadedFileName, setUploadedFileName] = useState('');
+  const [showUploadZone, setShowUploadZone] = useState(false);
 
   const examples = {
     'json-to-toon': {
@@ -138,7 +142,53 @@ config:
     if (conversionMode === 'json-to-toon') {
       setInput(examples['json-to-toon'].json);
     }
+    setUploadedFileName('');
   };
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file size (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('File size exceeds 5MB limit');
+      return;
+    }
+
+    // Validate file type
+    const validExtensions = ['.json', '.toon', '.txt'];
+    const fileExt = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+    if (!validExtensions.includes(fileExt)) {
+      toast.error('Invalid file type. Only .json, .toon, and .txt files are allowed');
+      return;
+    }
+
+    setIsConverting(true);
+    setUploadedFileName(file.name);
+    
+    try {
+      const result = await converterAPI.uploadAndConvert(file, conversionMode);
+      
+      if (result.success) {
+        setInput(result.output || '');
+        setOutput(result.output);
+        setMetrics(result.metrics);
+        setErrors(result.errors || []);
+        setWarnings(result.warnings || []);
+        toast.success('File uploaded and converted successfully! ⚡');
+      } else {
+        setErrors(result.errors || []);
+        toast.error('File conversion failed with errors');
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'File upload failed');
+      setUploadedFileName('');
+    } finally {
+      setIsConverting(false);
+      e.target.value = ''; // Reset file input
+    }
+  };
+
 
   return (
     <div className="space-y-6">
@@ -156,11 +206,11 @@ config:
 
       {/* Controls */}
       <div className="card-retro">
-        <div className="flex flex-wrap gap-4 items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col md:flex-row flex-wrap gap-4 items-stretch md:items-center justify-between">
+          <div className="flex flex-wrap items-center gap-2 md:gap-4 justify-center md:justify-start">
             <button
               onClick={() => setConversionMode('json-to-toon')}
-              className={`btn-neon px-4 py-2 ${
+              className={`btn-neon px-3 md:px-4 py-2 text-sm md:text-base flex-1 md:flex-none ${
                 conversionMode === 'json-to-toon' ? 'shadow-neon' : ''
               }`}
             >
@@ -168,14 +218,14 @@ config:
             </button>
             <button
               onClick={handleSwap}
-              className="btn-neon px-4 py-2"
+              className="btn-neon px-3 md:px-4 py-2"
               title="Swap input/output"
             >
-              <ArrowRightLeft />
+              <ArrowRightLeft size={18} />
             </button>
             <button
               onClick={() => setConversionMode('toon-to-json')}
-              className={`btn-neon px-4 py-2 ${
+              className={`btn-neon px-3 md:px-4 py-2 text-sm md:text-base flex-1 md:flex-none ${
                 conversionMode === 'toon-to-json' ? 'shadow-neon' : ''
               }`}
             >
@@ -183,13 +233,25 @@ config:
             </button>
           </div>
 
-          <div className="flex gap-2">
-            <button onClick={loadExample} className="btn-neon px-3 py-2 text-sm">
-              Load Example
+          <div className="flex gap-2 w-full md:w-auto">
+            <label className="btn-neon px-3 py-2 text-xs md:text-sm flex-1 md:flex-none cursor-pointer flex items-center justify-center gap-1">
+              <Upload size={16} />
+              <span className="hidden sm:inline">Upload</span>
+              <input
+                type="file"
+                onChange={handleFileUpload}
+                accept=".json,.toon,.txt"
+                className="hidden"
+                disabled={isConverting}
+              />
+            </label>
+            <button onClick={loadExample} className="btn-neon px-3 py-2 text-xs md:text-sm flex-1 md:flex-none">
+              <span className="hidden sm:inline">Load </span>Example
             </button>
-            <button onClick={handleExplain} className="btn-neon px-3 py-2 text-sm">
+            <button onClick={handleExplain} className="btn-neon px-3 py-2 text-xs md:text-sm flex-1 md:flex-none">
               <Lightbulb size={16} className="inline mr-1" />
-              Explain
+              <span className="hidden sm:inline">Explain</span>
+              <span className="sm:hidden">AI</span>
             </button>
           </div>
         </div>
@@ -203,26 +265,39 @@ config:
             <h3 className="text-xl font-bold">
               INPUT [{conversionMode === 'json-to-toon' ? 'JSON' : 'TOON'}]
             </h3>
-            <button
-              onClick={() => setInput('')}
-              className="text-sm text-terminal-dim hover:text-terminal-bright"
-            >
-              Clear
-            </button>
+            <div className="flex items-center gap-2">
+              {uploadedFileName && (
+                <span className="text-xs text-terminal-dim flex items-center gap-1">
+                  <File size={14} />
+                  {uploadedFileName}
+                </span>
+              )}
+              <button
+                onClick={() => {
+                  setInput('');
+                  setUploadedFileName('');
+                }}
+                className="text-sm text-terminal-dim hover:text-terminal-bright"
+              >
+                Clear
+              </button>
+            </div>
           </div>
           <div className="border-2 border-terminal-dim rounded-lg overflow-hidden">
             <Editor
-              height="400px"
+              height="300px"
+              className="md:h-[400px]"
               defaultLanguage={conversionMode === 'json-to-toon' ? 'json' : 'plaintext'}
               theme="vs-dark"
               value={input}
               onChange={value => setInput(value || '')}
               options={{
                 minimap: { enabled: false },
-                fontSize: 14,
+                fontSize: 12,
                 fontFamily: 'Fira Code, monospace',
                 lineNumbers: 'on',
                 scrollBeyondLastLine: false,
+                wordWrap: 'on',
               }}
             />
           </div>
@@ -230,30 +305,33 @@ config:
 
         {/* Output Editor */}
         <div className="card-retro">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-bold">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3">
+            <h3 className="text-lg md:text-xl font-bold">
               OUTPUT [{conversionMode === 'json-to-toon' ? 'TOON' : 'JSON'}]
             </h3>
-            <div className="flex gap-2">
+            <div className="flex gap-2 w-full sm:w-auto">
               <button
                 onClick={handleCopy}
-                className="btn-neon px-3 py-2 text-sm"
+                className="btn-neon px-3 py-2 text-sm flex-1 sm:flex-none"
                 disabled={!output}
+                title="Copy to clipboard"
               >
                 {copied ? <Check size={16} /> : <Copy size={16} />}
               </button>
               <button
                 onClick={handleDownload}
-                className="btn-neon px-3 py-2 text-sm"
+                className="btn-neon px-3 py-2 text-sm flex-1 sm:flex-none"
                 disabled={!output}
+                title="Download file"
               >
                 <Download size={16} />
               </button>
               {isAuthenticated && (
                 <button
                   onClick={() => setShowSaveModal(true)}
-                  className="btn-neon px-3 py-2 text-sm"
+                  className="btn-neon px-3 py-2 text-sm flex-1 sm:flex-none"
                   disabled={!output}
+                  title="Save conversion"
                 >
                   <Save size={16} />
                 </button>
@@ -262,17 +340,19 @@ config:
           </div>
           <div className="border-2 border-terminal-dim rounded-lg overflow-hidden">
             <Editor
-              height="400px"
+              height="300px"
+              className="md:h-[400px]"
               defaultLanguage={conversionMode === 'json-to-toon' ? 'plaintext' : 'json'}
               theme="vs-dark"
               value={output}
               options={{
                 readOnly: true,
                 minimap: { enabled: false },
-                fontSize: 14,
+                fontSize: 12,
                 fontFamily: 'Fira Code, monospace',
                 lineNumbers: 'on',
                 scrollBeyondLastLine: false,
+                wordWrap: 'on',
               }}
             />
           </div>
@@ -284,11 +364,11 @@ config:
         <button
           onClick={handleConvert}
           disabled={isConverting || !input.trim()}
-          className={`btn-neon px-12 py-4 text-xl ${
+          className={`btn-neon px-6 md:px-12 py-3 md:py-4 text-base md:text-xl w-full sm:w-auto ${
             isConverting ? 'animate-pulse' : 'hover:scale-105 transform transition-transform'
           }`}
         >
-          <Zap size={24} className="inline mr-2" />
+          <Zap size={20} className="inline mr-2 md:w-6 md:h-6" />
           {isConverting ? 'CONVERTING...' : 'CONVERT NOW'}
         </button>
       </div>

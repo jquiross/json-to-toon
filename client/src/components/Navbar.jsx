@@ -104,8 +104,9 @@ const Navbar = () => {
                       className="absolute right-0 mt-2 w-48 bg-terminal-bg border-2 border-terminal-dim rounded-lg overflow-hidden"
                     >
                       <Link
-                        to={`/profile/${user?.id}`}
+                        to={`/profile/${user?._id}`}
                         className="block px-4 py-3 hover:bg-terminal-dim/30 transition-colors"
+                        onClick={() => setProfileMenuOpen(false)}
                       >
                         <User size={16} className="inline mr-2" />
                         Profile
@@ -113,6 +114,7 @@ const Navbar = () => {
                       <Link
                         to="/my-conversions"
                         className="block px-4 py-3 hover:bg-terminal-dim/30 transition-colors"
+                        onClick={() => setProfileMenuOpen(false)}
                       >
                         <Trophy size={16} className="inline mr-2" />
                         My Conversions

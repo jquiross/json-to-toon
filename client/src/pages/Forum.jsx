@@ -21,9 +21,13 @@ const Forum = () => {
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['forum-posts', category, sort, search, page],
     queryFn: () => forumAPI.getPosts({ category, sort, search, page }),
+    retry: 1,
+    onError: (err) => {
+      console.error('Error fetching posts:', err);
+    },
   });
 
   const categories = [
@@ -121,9 +125,24 @@ const Forum = () => {
         <div className="text-center py-12">
           <div className="animate-pulse text-2xl">LOADING POSTS...</div>
         </div>
+      ) : error ? (
+        <div className="card-retro text-center py-12 border-2 border-red-500">
+          <h3 className="text-2xl font-bold text-red-500 mb-2">ERROR LOADING POSTS</h3>
+          <p className="text-terminal-dim">{error.message || 'Something went wrong'}</p>
+        </div>
+      ) : !data?.posts || data.posts.length === 0 ? (
+        <div className="card-retro text-center py-12">
+          <MessageSquare className="w-16 h-16 mx-auto mb-4 text-terminal-dim" />
+          <h3 className="text-2xl font-bold mb-2">No posts found</h3>
+          <p className="text-terminal-dim">
+            {search
+              ? 'Try different search terms'
+              : 'Be the first to create a post!'}
+          </p>
+        </div>
       ) : (
         <div className="space-y-4">
-          {data?.posts?.map((post, index) => (
+          {data.posts.map((post, index) => (
             <motion.div
               key={post._id}
               initial={{ opacity: 0, x: -20 }}

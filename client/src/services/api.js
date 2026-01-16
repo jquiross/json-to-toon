@@ -21,6 +21,19 @@ export const converterAPI = {
     return data;
   },
 
+  uploadAndConvert: async (file, conversionMode = 'json-to-toon') => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('conversionMode', conversionMode);
+    
+    const { data } = await api.post('/converter/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return data;
+  },
+
   saveConversion: async conversionData => {
     const { data } = await api.post('/converter/save', conversionData);
     return data;

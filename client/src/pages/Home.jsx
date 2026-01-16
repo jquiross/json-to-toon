@@ -53,17 +53,17 @@ const Home = () => {
         transition={{ duration: 0.8 }}
         className="text-center space-y-8 py-16"
       >
-        <h1 className="text-6xl md:text-8xl font-pixel glitch mb-4" data-text="JSON ⇄ TOON">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-pixel glitch mb-4 px-4" data-text="JSON ⇄ TOON">
           JSON ⇄ TOON
         </h1>
         
-        <div className="h-16 flex items-center justify-center">
-          <p className="text-2xl md:text-3xl font-mono text-terminal-bright typing-cursor">
+        <div className="h-auto min-h-[4rem] md:h-16 flex items-center justify-center px-4">
+          <p className="text-base sm:text-xl md:text-2xl lg:text-3xl font-mono text-terminal-bright typing-cursor text-center">
             {typedText}
           </p>
         </div>
 
-        <p className="text-lg md:text-xl text-terminal-dim max-w-2xl mx-auto">
+        <p className="text-base md:text-lg lg:text-xl text-terminal-dim max-w-2xl mx-auto px-4">
           The most advanced retro-styled JSON to TOON conversion platform.
           Built with love for developers who appreciate both functionality and aesthetics.
         </p>
